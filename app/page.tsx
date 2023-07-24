@@ -89,7 +89,7 @@ export default function MainComponent() {
 
   // Render the top-level items, passing a depth of 0
   return (
-    <div>
+    <div className="bg-white">
       {nestedData.map((item) => (
         <RenderItem key={item.id} item={item} depth={0} />
       ))}
