@@ -65,7 +65,7 @@ const RenderItem: React.FC<{ item: NestedItem; depth: number }> = ({
       )}
       {isExpanded &&
         item.children.map((child) => (
-          <>
+          <div key={child.id}>
             {child.subItems && child.subItems.length > 0 ? (
               <RenderItem key={child.id} item={child} depth={depth + 1} />
             ) : (
@@ -73,7 +73,7 @@ const RenderItem: React.FC<{ item: NestedItem; depth: number }> = ({
                 <RenderItem key={child.id} item={child} depth={depth + 1} />
               </div>
             )}
-          </>
+          </div>
         ))}
     </div>
   );
@@ -84,12 +84,12 @@ interface NotionDataTreeProps {
 }
 
 export default function NotionDataTree({ data }: any) {
-  console.log("data from notion data tree", data);
+  // console.log("data from notion data tree", data);
 
   // Build the nested structure from your flat data
   const nestedData = buildNestedStructure(data || []);
 
-  console.log("nestedData", nestedData);
+  // console.log("nestedData", nestedData);
 
   // Render the top-level items, passing a depth of 0
   return (
