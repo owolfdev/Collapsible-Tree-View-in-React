@@ -7,7 +7,7 @@ export default async function MainComponent() {
 
   return (
     <div className="bg-white p-5">
-      <h2 className="font-bold text-xl">Data Table</h2>
+      {/* <h2 className="font-bold text-xl">Data Table</h2> */}
       {/* <NotionDataTable /> */}
 
       <h2 className="font-bold text-xl">Data Tree</h2>
