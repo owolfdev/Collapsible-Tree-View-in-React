@@ -7,7 +7,14 @@ export type Person = {
   visits: number;
   progress: number;
   status: "relationship" | "complicated" | "single";
-  subRows?: Person[];
+  children?: Person[];
+};
+
+export type Item = {
+  id: string;
+  name: string;
+  parent: string | null | undefined;
+  children?: Item[];
 };
 
 const range = (len: number) => {
@@ -44,7 +51,7 @@ export function makeData(...lens: number[]) {
         visits: i * 10,
         progress: i * 10,
         status: "relationship",
-        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
+        children: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
       };
     });
   };

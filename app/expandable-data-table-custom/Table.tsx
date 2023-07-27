@@ -3,7 +3,7 @@
 import React, { HTMLAttributes, HTMLProps, useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 
-import { dataForRetail } from "./makeData";
+import { dataForRetail, Item } from "./makeData";
 
 import "./index.css";
 
@@ -24,23 +24,23 @@ import { makeData, Person } from "./makeData";
 export default function Table() {
   const rerender = React.useReducer(() => ({}), {})[1];
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<ColumnDef<Item>[]>(
     () => [
       {
         header: "Name",
         footer: (props) => props.column.id,
         columns: [
           {
-            accessorKey: "firstName",
+            accessorKey: "name",
             header: ({ table }) => (
               <>
-                <IndeterminateCheckbox
+                {/* <IndeterminateCheckbox
                   {...{
                     checked: table.getIsAllRowsSelected(),
                     indeterminate: table.getIsSomeRowsSelected(),
                     onChange: table.getToggleAllRowsSelectedHandler(),
                   }}
-                />{" "}
+                />{" "} */}
                 <button
                   {...{
                     onClick: table.getToggleAllRowsExpandedHandler(),
@@ -48,7 +48,7 @@ export default function Table() {
                 >
                   {table.getIsAllRowsExpanded() ? "👇" : "👉"}
                 </button>{" "}
-                First Name
+                Name
               </>
             ),
             cell: ({ row, getValue }) => (
@@ -62,13 +62,13 @@ export default function Table() {
                 }}
               >
                 <>
-                  <IndeterminateCheckbox
+                  {/* <IndeterminateCheckbox
                     {...{
                       checked: row.getIsSelected(),
                       indeterminate: row.getIsSomeSelected(),
                       onChange: row.getToggleSelectedHandler(),
                     }}
-                  />{" "}
+                  />{" "} */}
                   {row.getCanExpand() ? (
                     <button
                       {...{
@@ -77,52 +77,130 @@ export default function Table() {
                       }}
                     >
                       {row.getIsExpanded() ? "👇" : "👉"}
+                      {getValue()}
                     </button>
                   ) : (
-                    "🔵"
+                    <div>{getValue()}</div>
                   )}{" "}
-                  {getValue()}
                 </>
               </div>
             ),
             footer: (props) => props.column.id,
           },
+
+          ///
           {
-            accessorFn: (row) => row.lastName,
-            id: "lastName",
-            cell: (info) => info.getValue(),
-            header: () => <span>Last Name</span>,
+            accessorKey: "id",
+            header: ({ table }) => (
+              <>
+                {/* <IndeterminateCheckbox
+                  {...{
+                    checked: table.getIsAllRowsSelected(),
+                    indeterminate: table.getIsSomeRowsSelected(),
+                    onChange: table.getToggleAllRowsSelectedHandler(),
+                  }}
+                />{" "} */}
+                <button
+                  {...{
+                    onClick: table.getToggleAllRowsExpandedHandler(),
+                  }}
+                >
+                  {table.getIsAllRowsExpanded() ? "👇" : "👉"}
+                </button>{" "}
+                ID
+              </>
+            ),
+            cell: ({ row, getValue }) => (
+              <div
+                style={{
+                  // Since rows are flattened by default,
+                  // we can use the row.depth property
+                  // and paddingLeft to visually indicate the depth
+                  // of the row
+                  paddingLeft: `${row.depth * 2}rem`,
+                }}
+              >
+                <>
+                  {/* <IndeterminateCheckbox
+                    {...{
+                      checked: row.getIsSelected(),
+                      indeterminate: row.getIsSomeSelected(),
+                      onChange: row.getToggleSelectedHandler(),
+                    }}
+                  />{" "} */}
+                  {row.getCanExpand() ? (
+                    <button
+                      {...{
+                        onClick: row.getToggleExpandedHandler(),
+                        style: { cursor: "pointer" },
+                      }}
+                    >
+                      {/* {row.getIsExpanded() ? "👇" : "👉"} */}
+                    </button>
+                  ) : (
+                    <div>
+                      <a href="https://google.com" target="blank">
+                        🔵 Link to {row.original.name}
+                      </a>
+                    </div>
+                  )}{" "}
+                </>
+              </div>
+            ),
             footer: (props) => props.column.id,
           },
+          ///
+
+          // last name
+          // {
+          //   accessorFn: (row) => row.lastName,
+          //   id: "lastName",
+          //   cell: (info) => info.getValue(),
+          //   header: () => <span>Last Name</span>,
+          //   footer: (props) => props.column.id,
+          // },
+          // {
+          //   accessorFn: (row) => row.id,
+          //   id: "ID",
+          //   cell: (info) => (
+          //     <div>
+          //       <a href={`https://google.com/${info.getValue()}`}>
+          //         Link to {info.getValue()}
+          //       </a>
+          //     </div>
+          //   ),
+          //   header: () => <span>ID</span>,
+          //   footer: (props) => props.column.id,
+          // },
         ],
       },
       {
         header: "Info",
         footer: (props) => props.column.id,
         columns: [
-          {
-            accessorKey: "age",
-            header: () => "Age",
-            footer: (props) => props.column.id,
-          },
+          // {
+          //   accessorKey: "age",
+          //   header: () => "Age",
+          //   footer: (props) => props.column.id,
+          // },
           {
             header: "More Info",
             columns: [
-              {
-                accessorKey: "visits",
-                header: () => <span>Visits</span>,
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: "status",
-                header: "Status",
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: "progress",
-                header: "Profile Progress",
-                footer: (props) => props.column.id,
-              },
+              // {
+              //   accessorKey: "visits",
+              //   header: () => <span>Visits</span>,
+              //   footer: (props) => props.column.id,
+              // },
+              // {
+              //   accessorKey: "status",
+              //   header: "Status",
+              //   footer: (props) => props.column.id,
+              // },
+              // {
+              //   accessorKey: "progress",
+              //   header: "Profile Progress",
+              //   footer: (props) => props.column.id,
+              // },
             ],
           },
         ],
@@ -131,8 +209,10 @@ export default function Table() {
     []
   );
 
-  const [data, setData] = useState(() => makeData(100, 5, 3));
-  const refreshData = () => setData(() => makeData(100, 5, 3));
+  // const [data, setData] = useState(() => makeData(100, 5, 3));
+  const [data, setData] = useState(() => dataForRetail);
+  // const refreshData = () => setData(() => makeData(100, 5, 3));
+  const refreshData = () => setData(() => dataForRetail);
 
   useEffect(() => {
     console.log("data: ", data);
@@ -148,7 +228,7 @@ export default function Table() {
       expanded,
     },
     onExpandedChange: setExpanded,
-    getSubRows: (row) => row.subRows,
+    getSubRows: (row) => row.children,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -160,6 +240,7 @@ export default function Table() {
     <div className="p-2">
       <div className="h-2" />
       <table>
+        {/* table header */}
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -185,6 +266,8 @@ export default function Table() {
             </tr>
           ))}
         </thead>
+        {/* table header */}
+        {/*  */}
         <tbody>
           {table.getRowModel().rows.map((row) => {
             return (
@@ -204,8 +287,10 @@ export default function Table() {
           })}
         </tbody>
       </table>
+      {/*  */}
       <div className="h-2" />
-      <div className="flex items-center gap-2">
+      {/* pagination */}
+      {/* <div className="flex items-center gap-2">
         <button
           className="border rounded p-1"
           onClick={() => table.setPageIndex(0)}
@@ -265,15 +350,19 @@ export default function Table() {
             </option>
           ))}
         </select>
-      </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
+      </div> */}
+      {/* pagination */}
+      {/*  */}
+      {/* info */}
+      {/* <div>{table.getRowModel().rows.length} Rows</div> */}
+      {/* <div>
         <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <pre>{JSON.stringify(expanded, null, 2)}</pre>
+      </div> */}
+      {/* <pre>{JSON.stringify(expanded, null, 2)}</pre> */}
+      {/* info */}
     </div>
   );
 }
