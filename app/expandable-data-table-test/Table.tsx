@@ -1,9 +1,15 @@
 "use client";
 
-import React, { HTMLAttributes, HTMLProps, useState, useEffect } from "react";
+import React, {
+  HTMLAttributes,
+  HTMLProps,
+  useState,
+  useEffect,
+  use,
+} from "react";
 import ReactDOM from "react-dom/client";
 
-import { dataForRetail } from "./makeData";
+// import { dataForRetail } from "./makeData";
 
 import "./index.css";
 
@@ -131,15 +137,21 @@ export default function Table() {
     []
   );
 
-  const [data, setData] = useState(() => makeData(100, 5, 3));
-  const refreshData = () => setData(() => makeData(100, 5, 3));
+  const [data, setData] = useState(() => makeData(5, 5, 3));
+  const refreshData = () =>
+    setData(table.getExpandedRowModel().rows.map((r) => r.original));
 
   useEffect(() => {
-    console.log("data: ", data);
-    console.log("dataForRetail: ", dataForRetail);
-  }, [data, dataForRetail]);
+    console.log("updated: ", data);
+    // console.log("dataForRetail: ", dataForRetail);
+  }, [data]);
 
   const [expanded, setExpanded] = useState<ExpandedState>({});
+
+  useEffect(() => {
+    console.log("expanded: ", expanded);
+    console.log("expanded row model", table.getExpandedRowModel());
+  }, [expanded]);
 
   const table = useReactTable({
     data,
@@ -155,10 +167,6 @@ export default function Table() {
     getExpandedRowModel: getExpandedRowModel(),
     debugTable: true,
   });
-
-  useEffect(() => {
-    console.log("expanded: ", expanded);
-  }, [expanded]);
 
   return (
     <div className="p-2">
