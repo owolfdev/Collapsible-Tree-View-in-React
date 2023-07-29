@@ -593,162 +593,162 @@
 //   );
 // }
 
-"use client";
+// "use client";
 
-import Pagination from "./pagination";
+// import Pagination from "./pagination";
 
-import React, {
-  HTMLAttributes,
-  HTMLProps,
-  useState,
-  useEffect,
-  use,
-} from "react";
-import ReactDOM from "react-dom/client";
-import { getColumns } from "./columns";
-import "./index.css";
+// import React, {
+//   HTMLAttributes,
+//   HTMLProps,
+//   useState,
+//   useEffect,
+//   use,
+// } from "react";
+// import ReactDOM from "react-dom/client";
+// import { getColumns } from "./columns";
+// import "./index.css";
 
-import { Filter } from "./filter";
+// import { Filter } from "./filter";
 
-import {
-  Column,
-  Table,
-  ExpandedState,
-  useReactTable,
-  getCoreRowModel,
-  // getPaginationRowModel,
-  getFilteredRowModel,
-  getExpandedRowModel,
-  ColumnDef,
-  flexRender,
-} from "@tanstack/react-table";
-import { makeData, Person } from "./makeData";
-import { de } from "@faker-js/faker";
+// import {
+//   Column,
+//   Table,
+//   ExpandedState,
+//   useReactTable,
+//   getCoreRowModel,
+//   // getPaginationRowModel,
+//   getFilteredRowModel,
+//   getExpandedRowModel,
+//   ColumnDef,
+//   flexRender,
+// } from "@tanstack/react-table";
+// import { makeData, Person } from "./makeData";
+// import { de } from "@faker-js/faker";
 
-export default function Table() {
-  const rerender = React.useReducer(() => ({}), {})[1];
+// export default function Table() {
+//   const rerender = React.useReducer(() => ({}), {})[1];
 
-  const columns = getColumns();
+//   const columns = getColumns();
 
-  const [data, setData] = useState(() => makeData(100, 5, 3));
-  const refreshData = () => setData(() => makeData(100, 5, 3));
+//   const [data, setData] = useState(() => makeData(100, 5, 3));
+//   const refreshData = () => setData(() => makeData(100, 5, 3));
 
-  const [expanded, setExpanded] = useState<ExpandedState>({});
-  const [expandedRowsLength, setExpandedRowsLength] = useState<number>(0);
-  const [defaultPageSize, setDefaultPageSize] = useState(5); // change to your initial page size
-  const [dynamicPageSize, setDynamicPageSize] = useState(data.length);
+//   const [expanded, setExpanded] = useState<ExpandedState>({});
+//   const [expandedRowsLength, setExpandedRowsLength] = useState<number>(0);
+//   const [defaultPageSize, setDefaultPageSize] = useState(5); // change to your initial page size
+//   const [dynamicPageSize, setDynamicPageSize] = useState(data.length);
 
-  const [pageIndex, setPageIndex] = useState(0); // Add this line
-  const [pageSize, setPageSize] = useState(10); // Add this line
+//   const [pageIndex, setPageIndex] = useState(0); // Add this line
+//   const [pageSize, setPageSize] = useState(10); // Add this line
 
-  const [displayedData, setDisplayedData] = useState<Person[]>([]);
+//   const [displayedData, setDisplayedData] = useState<Person[]>([]);
 
-  useEffect(() => {
-    setDisplayedData(
-      data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
-    );
-  }, []);
+//   useEffect(() => {
+//     setDisplayedData(
+//       data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+//     );
+//   }, []);
 
-  const table = useReactTable({
-    data: displayedData,
-    columns,
-    state: {
-      expanded,
-    },
-    onExpandedChange: setExpanded,
-    getSubRows: (row) => row.subRows,
-    getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    debugTable: true,
-    // manualPagination: true,
-  });
+//   const table = useReactTable({
+//     data: displayedData,
+//     columns,
+//     state: {
+//       expanded,
+//     },
+//     onExpandedChange: setExpanded,
+//     getSubRows: (row) => row.subRows,
+//     getCoreRowModel: getCoreRowModel(),
+//     // getPaginationRowModel: getPaginationRowModel(),
+//     getFilteredRowModel: getFilteredRowModel(),
+//     getExpandedRowModel: getExpandedRowModel(),
+//     debugTable: true,
+//     // manualPagination: true,
+//   });
 
-  useEffect(() => {
-    setExpandedRowsLength(
-      table.getExpandedRowModel().rows.length - data.length
-    );
-  }, [expanded]);
+//   useEffect(() => {
+//     setExpandedRowsLength(
+//       table.getExpandedRowModel().rows.length - data.length
+//     );
+//   }, [expanded]);
 
-  useEffect(() => {
-    // console.log("expandedRowsLength: ", expandedRowsLength);
-    setDynamicPageSize(defaultPageSize + expandedRowsLength);
-  }, [expandedRowsLength]);
+//   useEffect(() => {
+//     // console.log("expandedRowsLength: ", expandedRowsLength);
+//     setDynamicPageSize(defaultPageSize + expandedRowsLength);
+//   }, [expandedRowsLength]);
 
-  useEffect(() => {
-    console.log("dynamicPageSize: ", dynamicPageSize);
-    console.log("expandedRowsLength: ", expandedRowsLength);
-    console.log("defaultPageSize: ", defaultPageSize);
-    // console.log("pagination row model: ", table.getPaginationRowModel());
-    if (expandedRowsLength + defaultPageSize >= defaultPageSize) {
-      table.setPageSize(dynamicPageSize);
-    } else {
-      table.setPageSize(defaultPageSize);
-    }
-  }, [dynamicPageSize]);
+//   useEffect(() => {
+//     console.log("dynamicPageSize: ", dynamicPageSize);
+//     console.log("expandedRowsLength: ", expandedRowsLength);
+//     console.log("defaultPageSize: ", defaultPageSize);
+//     // console.log("pagination row model: ", table.getPaginationRowModel());
+//     if (expandedRowsLength + defaultPageSize >= defaultPageSize) {
+//       table.setPageSize(dynamicPageSize);
+//     } else {
+//       table.setPageSize(defaultPageSize);
+//     }
+//   }, [dynamicPageSize]);
 
-  return (
-    <div className="p-2">
-      <div className="h-2" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter column={header.column} table={table} />
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <div className="h-2" />
-      <Pagination
-        data={data}
-        pageLimit={5}
-        dataLimit={10}
-        pageIndex={pageIndex}
-        setPageIndex={setPageIndex}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-      />
-    </div>
-  );
-}
+//   return (
+//     <div className="p-2">
+//       <div className="h-2" />
+//       <table>
+//         <thead>
+//           {table.getHeaderGroups().map((headerGroup) => (
+//             <tr key={headerGroup.id}>
+//               {headerGroup.headers.map((header) => {
+//                 return (
+//                   <th key={header.id} colSpan={header.colSpan}>
+//                     {header.isPlaceholder ? null : (
+//                       <div>
+//                         {flexRender(
+//                           header.column.columnDef.header,
+//                           header.getContext()
+//                         )}
+//                         {header.column.getCanFilter() ? (
+//                           <div>
+//                             <Filter column={header.column} table={table} />
+//                           </div>
+//                         ) : null}
+//                       </div>
+//                     )}
+//                   </th>
+//                 );
+//               })}
+//             </tr>
+//           ))}
+//         </thead>
+//         <tbody>
+//           {table.getRowModel().rows.map((row) => {
+//             return (
+//               <tr key={row.id}>
+//                 {row.getVisibleCells().map((cell) => {
+//                   return (
+//                     <td key={cell.id}>
+//                       {flexRender(
+//                         cell.column.columnDef.cell,
+//                         cell.getContext()
+//                       )}
+//                     </td>
+//                   );
+//                 })}
+//               </tr>
+//             );
+//           })}
+//         </tbody>
+//       </table>
+//       <div className="h-2" />
+//       <Pagination
+//         data={data}
+//         pageLimit={5}
+//         dataLimit={10}
+//         pageIndex={pageIndex}
+//         setPageIndex={setPageIndex}
+//         pageSize={pageSize}
+//         setPageSize={setPageSize}
+//       />
+//     </div>
+//   );
+// }
 
 {
   /* <div className="flex items-center gap-2">
