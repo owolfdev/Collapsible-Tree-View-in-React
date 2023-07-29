@@ -1,6 +1,14 @@
 "use client";
 
-import React, { HTMLAttributes, HTMLProps, useState, useEffect } from "react";
+import Pagination from "./pagination";
+
+import React, {
+  HTMLAttributes,
+  HTMLProps,
+  useState,
+  useEffect,
+  use,
+} from "react";
 import ReactDOM from "react-dom/client";
 import { getColumns } from "./columns";
 import "./index.css";
@@ -13,7 +21,7 @@ import {
   ExpandedState,
   useReactTable,
   getCoreRowModel,
-  getPaginationRowModel,
+  // getPaginationRowModel,
   getFilteredRowModel,
   getExpandedRowModel,
   ColumnDef,
@@ -27,19 +35,27 @@ export default function Table() {
 
   const columns = getColumns();
 
-  const [data, setData] = useState(() => makeData(20, 5, 3));
-  const refreshData = () => setData(() => makeData(20, 5, 3));
+  const [data, setData] = useState(() => makeData(100, 5, 3));
+  const refreshData = () => setData(() => makeData(100, 5, 3));
 
   const [expanded, setExpanded] = useState<ExpandedState>({});
   const [expandedRowsLength, setExpandedRowsLength] = useState<number>(0);
-  const [defaultPageSize, setDefaultPageSize] = useState(data.length); // change to your initial page size
+  const [defaultPageSize, setDefaultPageSize] = useState(5); // change to your initial page size
   const [dynamicPageSize, setDynamicPageSize] = useState(data.length);
 
   const [pageIndex, setPageIndex] = useState(0); // Add this line
   const [pageSize, setPageSize] = useState(10); // Add this line
 
+  const [displayedData, setDisplayedData] = useState<Person[]>([]);
+
+  useEffect(() => {
+    setDisplayedData(
+      data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+    );
+  }, []);
+
   const table = useReactTable({
-    data,
+    data: displayedData,
     columns,
     state: {
       expanded,
@@ -77,9 +93,46 @@ export default function Table() {
     }
   }, [dynamicPageSize]);
 
+  const handleChangePage = (e: any) => {
+    if (e.target.id === "next-page") {
+      pageIndex < data.length / pageSize - 1 && setPageIndex(pageIndex + 1);
+      console.log("pageIndex: ", data.length / pageSize);
+    }
+    if (e.target.id === "previous-page") {
+      pageIndex > 0 && setPageIndex(pageIndex - 1);
+    }
+    console.log("pageIndex: ", pageIndex);
+  };
+
+  useEffect(() => {
+    setDisplayedData(
+      data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+    );
+    setExpanded({});
+  }, [pageIndex]);
+
+  useEffect(() => {
+    setDisplayedData(
+      data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+    );
+    setExpanded({});
+  }, [pageSize]);
+
+  useEffect(() => {
+    console.log("displayedData: ", displayedData);
+  }, [displayedData]);
+
+  const handlePageSizeChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setPageSize(Number(event.target.value));
+    setPageIndex(0);
+  };
+
   return (
     <div className="p-2">
       <div className="h-2" />
+
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -125,76 +178,61 @@ export default function Table() {
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      {/* <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<<"}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<"}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {">"}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          {">>"}
-        </button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            // table.setPageSize(Number(e.target.value));
-          }}
-        >
-          {[data.length, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div> */}
-      {/* <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
+
+      <div className="flex flex-col gap-3 mt-4">
+        <div className="flex gap-3">
+          <button
+            className="border rounded px-2 bg-gray-100 hover:bg-gray-200 active:bg-gray-50"
+            id="first-page"
+            onClick={() => setPageIndex(0)}
+          >
+            {`<<`}
+          </button>{" "}
+          {/* First page button */}
+          <button
+            className="border rounded px-2 bg-gray-100 hover:bg-gray-200 active:bg-gray-50 disabled:text-gray-200 disabled:bg-gray-100"
+            id="previous-page"
+            onClick={handleChangePage}
+            disabled={pageIndex === 0}
+          >
+            Previous Page
+          </button>
+          <button
+            className="border rounded px-2 bg-gray-100 hover:bg-gray-200 active:bg-gray-50 disabled:text-gray-200 disabled:bg-gray-100"
+            id="next-page"
+            onClick={handleChangePage}
+            disabled={pageIndex >= Math.ceil(data.length / pageSize) - 1}
+          >
+            Next Page
+          </button>
+          <button
+            className="border rounded px-2 bg-gray-100 hover:bg-gray-200 active:bg-gray-50"
+            id="last-page"
+            onClick={() => setPageIndex(Math.floor(data.length / pageSize - 1))}
+          >
+            {`>>`}
+          </button>{" "}
+          {/* Last page button */}
+        </div>
+        <div className="flex flex-col gap-3 mt-4">
+          <div>Current Page: {pageIndex + 1}</div>
+          <div>
+            Page size:
+            <select
+              className="border rounded px-2"
+              value={pageSize}
+              onChange={handlePageSizeChange}
+            >
+              {[10, 20, 30, 40].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* Page size input */}
+        </div>
       </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <pre>{JSON.stringify(expanded, null, 2)}</pre> */}
     </div>
   );
 }
