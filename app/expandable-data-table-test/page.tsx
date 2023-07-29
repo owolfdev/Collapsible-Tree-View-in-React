@@ -1,5 +1,5 @@
 import React from "react";
-import Table from "./Table";
+// import Table from "./Table";
 
 const ParentComponent = () => {
   // const data = React.useMemo(
@@ -25,7 +25,6 @@ const ParentComponent = () => {
   //   ],
   //   []
   // );
-
   // const columns = React.useMemo(
   //   () => [
   //     {
@@ -39,8 +38,7 @@ const ParentComponent = () => {
   //   ],
   //   []
   // );
-
-  return <Table />;
+  // return <Table />;
 };
 
 export default ParentComponent;
