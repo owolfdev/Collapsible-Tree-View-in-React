@@ -15,7 +15,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 
-export const getColumns = () => {
+export const useColumns = () => {
   return React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
