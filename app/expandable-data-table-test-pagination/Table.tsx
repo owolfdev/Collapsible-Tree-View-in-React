@@ -10,7 +10,7 @@ import React, {
   use,
 } from "react";
 import ReactDOM from "react-dom/client";
-import { useColumns } from "./columns";
+import { useGetColumns } from "./columns";
 import "./index.css";
 
 import { Filter } from "./filter";
@@ -33,7 +33,7 @@ import { de } from "@faker-js/faker";
 export default function Table() {
   const rerender = React.useReducer(() => ({}), {})[1];
 
-  const columns = useColumns();
+  const columns = useGetColumns();
 
   const [data, setData] = useState(() => makeData(100, 5, 3));
   const refreshData = () => setData(() => makeData(100, 5, 3));
