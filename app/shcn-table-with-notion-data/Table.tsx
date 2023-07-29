@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import {
   CaretSortIcon,
   ChevronDownIcon,
+  ChevronRightIcon,
+  Link2Icon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
 import {
@@ -64,6 +66,14 @@ export function DataTableDemo() {
   const refreshData = () => setData(() => notionData);
 
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  const [pageIndex, setPageIndex] = useState(0); // Add this line
+  const [pageSize, setPageSize] = useState(10); // Add this line
+
+  const [expandedRowsLength, setExpandedRowsLength] = useState<number>(0);
+  const [defaultPageSize, setDefaultPageSize] = useState(5); // change to your initial page size
+  const [dynamicPageSize, setDynamicPageSize] = useState(data.length);
+
+  const [displayedData, setDisplayedData] = useState<Item[]>([]);
 
   const columns = React.useMemo<ColumnDef<Item>[]>(
     () => [
@@ -80,7 +90,11 @@ export function DataTableDemo() {
                     onClick: table.getToggleAllRowsExpandedHandler(),
                   }}
                 >
-                  {table.getIsAllRowsExpanded() ? "👇" : "👉"}
+                  {table.getIsAllRowsExpanded() ? (
+                    <ChevronDownIcon />
+                  ) : (
+                    <ChevronRightIcon />
+                  )}
                 </button>{" "}
                 Name
               </>
@@ -99,8 +113,17 @@ export function DataTableDemo() {
                         style: { cursor: "pointer" },
                       }}
                     >
-                      {row.getIsExpanded() ? "👇" : "👉"}
-                      {getValue()}
+                      {row.getIsExpanded() ? (
+                        <div className="flex gap-2">
+                          <ChevronDownIcon />
+                          {getValue()}
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <ChevronRightIcon />
+                          {getValue()}
+                        </div>
+                      )}{" "}
                     </button>
                   ) : (
                     <div>{getValue()}</div>
@@ -121,7 +144,11 @@ export function DataTableDemo() {
                     onClick: table.getToggleAllRowsExpandedHandler(),
                   }}
                 >
-                  {table.getIsAllRowsExpanded() ? "👇" : "👉"}
+                  {table.getIsAllRowsExpanded() ? (
+                    <ChevronDownIcon />
+                  ) : (
+                    <ChevronRightIcon />
+                  )}
                 </button>{" "}
                 ID
               </>
@@ -142,8 +169,12 @@ export function DataTableDemo() {
                     ></button>
                   ) : (
                     <div>
-                      <a href="https://google.com" target="blank">
-                        🔵 Link to {row.original.name}
+                      <a
+                        className="flex gap-2 items-center"
+                        href="https://google.com"
+                        target="blank"
+                      >
+                        <Link2Icon /> Link to {row.original.name}
                       </a>
                     </div>
                   )}{" "}
@@ -154,22 +185,28 @@ export function DataTableDemo() {
           },
         ],
       },
-      {
-        header: "Info",
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            header: "More Info",
-            columns: [],
-          },
-        ],
-      },
+      // {
+      //   header: "Info",
+      //   footer: (props) => props.column.id,
+      //   columns: [
+      //     {
+      //       header: "More Info",
+      //       columns: [],
+      //     },
+      //   ],
+      // },
     ],
     []
   );
 
+  useEffect(() => {
+    setDisplayedData(
+      data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
+    );
+  }, []);
+
   const table = useReactTable({
-    data,
+    data: displayedData,
     columns,
     state: {
       expanded,
@@ -177,20 +214,45 @@ export function DataTableDemo() {
     onExpandedChange: setExpanded,
     getSubRows: (row) => row.children,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     debugTable: true,
+    // manualPagination: true,
   });
+
+  useEffect(() => {
+    setExpandedRowsLength(
+      table.getExpandedRowModel().rows.length - data.length
+    );
+    console.log("expanded: ", expanded);
+  }, [expanded]);
+
+  useEffect(() => {
+    // console.log("expandedRowsLength: ", expandedRowsLength);
+    setDynamicPageSize(defaultPageSize + expandedRowsLength);
+  }, [expandedRowsLength]);
+
+  useEffect(() => {
+    console.log("dynamicPageSize: ", dynamicPageSize);
+    console.log("expandedRowsLength: ", expandedRowsLength);
+    console.log("defaultPageSize: ", defaultPageSize);
+    // console.log("pagination row model: ", table.getPaginationRowModel());
+    if (expandedRowsLength + defaultPageSize >= defaultPageSize) {
+      table.setPageSize(dynamicPageSize);
+    } else {
+      table.setPageSize(defaultPageSize);
+    }
+  }, [dynamicPageSize]);
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter names..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -271,12 +333,13 @@ export function DataTableDemo() {
           </TableBody>
         </Table>
       </div>
+      {/* pagination */}
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        {/* <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
+        </div> */}
+        {/* <div className="space-x-2">
           <Button
             variant="outline"
             size="sm"
@@ -293,7 +356,7 @@ export function DataTableDemo() {
           >
             Next
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
