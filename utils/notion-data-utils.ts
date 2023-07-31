@@ -61,7 +61,7 @@ export const processNotionData = (data: NotionData[]) => {
         return file.name;
       }),
       status: item.properties.Status?.status?.name,
-      publicUrl: item.public_url,
+      publicUrl: item.url,
     };
     return processedItem;
   });
@@ -130,7 +130,19 @@ export function transformNotionData(
     }
   });
 
-  return result;
+  const sortItems = (items: TransformedData[]): TransformedData[] => {
+    return items
+      .sort((a, b) => {
+        if (a.type < b.type) return -1;
+        if (a.type > b.type) return 1;
+        return 0;
+      })
+      .map((item) => {
+        return { ...item, children: sortItems(item.children) };
+      });
+  };
+
+  return sortItems(result);
 }
 
 function toJS(object: any): string {

@@ -48,6 +48,10 @@ import {
 import { getProcessedNotionData } from "@/utils/notion-data-utils";
 import { ro } from "@faker-js/faker";
 
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+
 export type Item = {
   id: string;
   name: string;
@@ -66,6 +70,8 @@ export type Item = {
   publicUrl: string | null;
   children?: Item[];
 };
+
+import Link from "next/link";
 
 export function DataTableDemo() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -105,11 +111,25 @@ export function DataTableDemo() {
 
   function countItemsWithType(data: any, targetType: string) {
     let count = 0;
-    for (const item of data) {
-      if (item.type === targetType) {
+
+    // Recursive helper function
+    function helper(obj: any) {
+      if (obj.type === targetType) {
         count++;
       }
+
+      if (Array.isArray(obj.children)) {
+        for (const child of obj.children) {
+          helper(child);
+        }
+      }
     }
+
+    // Initialize recursion
+    for (const item of data) {
+      helper(item);
+    }
+
     return count;
   }
 
@@ -154,31 +174,51 @@ export function DataTableDemo() {
                           }}
                         >
                           {row.getIsExpanded() ? (
-                            <div className="flex gap-2 font-semibold text-lg items-center">
-                              <ChevronDownIcon />
-                              {getValue()}
+                            <div>
+                              <div className="flex gap-2 font-semibold text-lg items-center">
+                                <ChevronDownIcon />
+                                {getValue()}
+                              </div>
+                              <div className="pl-6">
+                                {row.original.description}
+                              </div>
                             </div>
                           ) : (
-                            <div className="flex gap-2 font-semibold text-lg items-center">
-                              <ChevronRightIcon />
-                              {getValue()}
+                            <div>
+                              <div className="flex gap-2 font-semibold text-lg items-center">
+                                <ChevronRightIcon />
+                                {getValue()}
+                              </div>
+                              <div className="pl-6">
+                                {row.original.description}
+                              </div>
                             </div>
                           )}{" "}
                         </button>
                       </div>
                       <div className="flex gap-2">
-                        {countItemsWithType(row.original.children, "Task") >
-                          0 && (
-                          <div className="px-3 py-1 bg-blue-400 rounded-full text-white">
-                            {countItemsWithType(row.original.children, "Task")}
-                          </div>
-                        )}
-                        {countItemsWithType(row.original.children, "Issue") >
-                          0 && (
-                          <div className="px-3 py-1 bg-red-400 rounded-full text-white">
-                            {countItemsWithType(row.original.children, "Issue")}
-                          </div>
-                        )}
+                        <div>
+                          {countItemsWithType(row.original.children, "Task") >
+                            0 && (
+                            <div className="flex justify-center w-[20px] h-[20px] bg-blue-400 rounded-full text-white text-sm">
+                              {countItemsWithType(
+                                row.original.children,
+                                "Task"
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          {countItemsWithType(row.original.children, "Issue") >
+                            0 && (
+                            <div className="flex justify-center w-[20px] h-[20px] bg-red-400 rounded-full text-white text-sm">
+                              {countItemsWithType(
+                                row.original.children,
+                                "Issue"
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -189,20 +229,72 @@ export function DataTableDemo() {
                           : "border-2 border-red-400"
                       }`}
                     >
-                      <div className="text-lg font-semibold mb-2 flex justify-between">
-                        <span className="font-semibold">{getValue()}</span>
-                        <span
-                          className={`${
-                            row.original.type === "Task"
-                              ? "px-3 py-1 bg-blue-400 rounded-lg text-white"
-                              : "px-3 py-1 bg-red-400 rounded-lg text-white"
-                          }`}
-                        >
-                          {row.original.type}
-                        </span>{" "}
-                      </div>
+                      <div className="flex justify-between ">
+                        <div className="w-2/3">
+                          <div className="flex justify-between">
+                            <div className="text-xl font-bold pb-2">
+                              {getValue()}
+                            </div>
+                            <div className="pr-5">
+                              <span
+                                className={`${
+                                  row.original.type === "Task"
+                                    ? "px-2 py-1 bg-blue-400 rounded-lg text-white text-sm"
+                                    : "px-2 py-1 bg-red-400 rounded-lg text-white text-sm"
+                                }`}
+                              >
+                                {row.original.type}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex flex-col">
+                              <div className="font-bold">Description</div>
+                              {row.original.description}
+                            </div>
 
-                      <div>{row.original.description}</div>
+                            <div>
+                              <div className="flex flex-col">
+                                {row.original.links.length > 0 && (
+                                  <>
+                                    <div className="font-bold">
+                                      Link to file
+                                    </div>
+                                    <Link href={row.original.links[0]}>
+                                      {row.original.links}
+                                    </Link>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="inline-flex flex-col items-start">
+                                <Link href={`${row.original.publicUrl}`}>
+                                  <div className="font-bold rounded px-2 py-1 bg-yellow-200">
+                                    Link to Notion Record
+                                  </div>
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="border w-[1px] "></div>
+
+                        <div className="flex flex-col gap-4 pl-4">
+                          <div className="flex  space-x-2">
+                            <Switch id="airplane-mode" />
+                            <Label htmlFor="airplane-mode">Done</Label>
+                          </div>
+
+                          <div>
+                            <Textarea placeholder="Type your feedback here." />
+                          </div>
+                        </div>
+
+                        {/*  */}
+                      </div>
                       {/* <div>row: {JSON.stringify(row)}</div> */}
                     </div>
                   )}{" "}
