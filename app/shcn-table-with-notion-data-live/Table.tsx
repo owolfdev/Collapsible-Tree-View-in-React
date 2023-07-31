@@ -154,12 +154,12 @@ export function DataTableDemo() {
                           }}
                         >
                           {row.getIsExpanded() ? (
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 font-semibold text-lg items-center">
                               <ChevronDownIcon />
                               {getValue()}
                             </div>
                           ) : (
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 font-semibold text-lg items-center">
                               <ChevronRightIcon />
                               {getValue()}
                             </div>
@@ -169,15 +169,13 @@ export function DataTableDemo() {
                       <div className="flex gap-2">
                         {countItemsWithType(row.original.children, "Task") >
                           0 && (
-                          <div className="px-2 py-1 bg-blue-100 rounded">
-                            Tasks:{" "}
+                          <div className="px-3 py-1 bg-blue-400 rounded-full text-white">
                             {countItemsWithType(row.original.children, "Task")}
                           </div>
                         )}
                         {countItemsWithType(row.original.children, "Issue") >
                           0 && (
-                          <div className="px-2 py-1 bg-red-100 rounded">
-                            Issues:{" "}
+                          <div className="px-3 py-1 bg-red-400 rounded-full text-white">
                             {countItemsWithType(row.original.children, "Issue")}
                           </div>
                         )}
@@ -187,13 +185,21 @@ export function DataTableDemo() {
                     <div
                       className={`rounded-lg p-5 ${
                         row.original.type === "Task"
-                          ? "bg-blue-100"
-                          : "bg-red-100"
+                          ? "border-2 border-blue-400"
+                          : "border-2 border-red-400"
                       }`}
                     >
-                      <div className="text-lg font-bold mb-2">
-                        {row.original.type}:{" "}
-                        <span className="font-normal">{getValue()}</span>
+                      <div className="text-lg font-semibold mb-2 flex justify-between">
+                        <span className="font-semibold">{getValue()}</span>
+                        <span
+                          className={`${
+                            row.original.type === "Task"
+                              ? "px-3 py-1 bg-blue-400 rounded-lg text-white"
+                              : "px-3 py-1 bg-red-400 rounded-lg text-white"
+                          }`}
+                        >
+                          {row.original.type}
+                        </span>{" "}
                       </div>
 
                       <div>{row.original.description}</div>
