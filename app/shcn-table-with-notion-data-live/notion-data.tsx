@@ -14,7 +14,7 @@ async function NotionData() {
     <div>
       <div className="flex flex-col gap-4">
         {notionData?.map((item: any) => (
-          <>
+          <div key={item.id}>
             <div>Key tester: {item.name}</div>
             <div>Key tester: {JSON.stringify(item.notes)}</div>
 
@@ -24,7 +24,7 @@ async function NotionData() {
               ))}
             </div>
             <div>{JSON.stringify(item)}</div>
-          </>
+          </div>
         ))}
       </div>
     </div>
