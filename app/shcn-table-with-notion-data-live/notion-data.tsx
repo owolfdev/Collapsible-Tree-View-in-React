@@ -20,7 +20,7 @@ async function NotionData() {
 
             <div className="flex flex-col">
               {Object.keys(item).map((key) => (
-                <div>{key}</div>
+                <div key={item.id}>{key}</div>
               ))}
             </div>
             <div>{JSON.stringify(item)}</div>
