@@ -230,7 +230,7 @@ export function DataTableDemo() {
                       }`}
                     >
                       <div className="flex justify-between ">
-                        <div className="w-2/3">
+                        <div className="w-2/3 ">
                           <div className="flex justify-between">
                             <div className="text-xl font-bold pb-2">
                               {getValue()}
@@ -280,10 +280,10 @@ export function DataTableDemo() {
                           </div>
                         </div>
 
-                        <div className="border w-[1px] "></div>
+                        <div className="border w-[1px]"></div>
 
-                        <div className="flex flex-col gap-4 pl-4">
-                          <div className="flex  space-x-2">
+                        <div className="flex flex-col gap-4 pl-4  w-1/3">
+                          <div className="flex space-x-2">
                             <Switch id="airplane-mode" />
                             <Label htmlFor="airplane-mode">Done</Label>
                           </div>
