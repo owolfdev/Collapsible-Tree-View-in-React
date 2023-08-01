@@ -312,7 +312,7 @@ export function DataTableDemo() {
                             </div>
                           </div>
 
-                          <div className="flex flex-col gap-2">
+                          <div className="flex flex-col gap-4">
                             <div className="flex flex-col">
                               <div className=" pt-2">
                                 <span className="font-bold">Due Date:</span>{" "}
@@ -325,9 +325,9 @@ export function DataTableDemo() {
                               {row.original.description}
                             </div>
 
-                            <div className="flex flex-col mb-2">
-                              <div className="font-bold">Media & Files</div>
-                              {row.original.filesAndMedia.length > 0 && (
+                            {row.original.filesAndMedia.length > 0 && (
+                              <div className="flex flex-col mb-2">
+                                <div className="font-bold">Media & Files</div>
                                 <div className="flex gap-1">
                                   {row.original.filesAndMedia.map((file) => (
                                     <div
@@ -346,8 +346,8 @@ export function DataTableDemo() {
                                     </div>
                                   ))}
                                 </div>
-                              )}
-                            </div>
+                              </div>
+                            )}
 
                             <div>
                               <div className="inline-flex flex-col items-start">
@@ -420,6 +420,10 @@ export function DataTableDemo() {
                             <div className="flex space-x-2 items-center">
                               <Switch id="approved" />
                               <Label htmlFor="approved">Approved</Label>
+                            </div>
+
+                            <div>
+                              <Textarea placeholder="Type your feedback here." />
                             </div>
                           </div>
                         </div>
