@@ -165,7 +165,7 @@ export function DataTableDemo() {
               >
                 <>
                   {row.getCanExpand() ? (
-                    <div className="flex justify-between">
+                    <div className="flex justify-between ">
                       <div>
                         <button
                           {...{
@@ -231,23 +231,92 @@ export function DataTableDemo() {
                     >
                       <div className="flex justify-between ">
                         <div className="w-2/3 ">
-                          <div className="flex justify-between">
-                            <div className="text-xl font-bold pb-2">
-                              {getValue()}
+                          <div className="pb-2 flex justify-between items-center ">
+                            <div>
+                              <div className="text-xl font-bold ">
+                                {getValue()}
+                              </div>
+                              <div className="text-xs">
+                                Priority:{" "}
+                                <span
+                                  className={`rounded px-1 py-[2px] text-white ${
+                                    row.original.priority === "High"
+                                      ? "bg-red-400"
+                                      : row.original.priority === "Medium"
+                                      ? "bg-green-400"
+                                      : row.original.priority === "Low"
+                                      ? "bg-blue-400"
+                                      : ""
+                                  }`}
+                                >
+                                  {row.original.priority}
+                                </span>
+                              </div>
                             </div>
-                            <div className="pr-5">
-                              <span
-                                className={`${
-                                  row.original.type === "Task"
-                                    ? "px-2 py-1 bg-blue-400 rounded-lg text-white text-sm"
-                                    : "px-2 py-1 bg-red-400 rounded-lg text-white text-sm"
-                                }`}
-                              >
-                                {row.original.type}
-                              </span>
+                            {/* type, status*/}
+                            <div className="flex">
+                              {/* type */}
+                              <div className="pr-5">
+                                {/* <div className="pb-1 text-xs text-center text-gray-400">
+                                  Type
+                                </div> */}
+                                <span
+                                  className={`${
+                                    row.original.type === "Task"
+                                      ? "px-2 py-1 bg-blue-400  border-2 border-blue-500 rounded-lg text-white text-sm"
+                                      : "px-2 py-1 bg-red-400 border-2 border-red-500 rounded-lg text-white text-sm"
+                                  }`}
+                                >
+                                  {row.original.type}
+                                </span>
+                              </div>
+                              {/* status */}
+                              <div className="pr-5">
+                                {/* <div className="pb-1 text-xs text-center text-gray-400">
+                                  Status
+                                </div> */}
+                                <span
+                                  className={`px-2 py-1 rounded-lg text-white text-sm ${
+                                    row.original.status === "Not started"
+                                      ? "bg-gray-400"
+                                      : row.original.status === "In progress"
+                                      ? "bg-blue-400"
+                                      : row.original.status === "Approved"
+                                      ? "bg-green-400"
+                                      : "bg-gray-400"
+                                  }`}
+                                >
+                                  {row.original.status}
+                                </span>
+                              </div>
+                              {/* priority */}
+                              {/* <div className="pr-5">
+                               
+                                <span
+                                  className={`px-2 py-1 rounded-lg text-white text-xs ${
+                                    row.original.priority === "High"
+                                      ? "bg-red-600"
+                                      : row.original.priority === "Medium"
+                                      ? "bg-green-400"
+                                      : row.original.priority === "Low"
+                                      ? "bg-blue-400"
+                                      : "bg-gray-400"
+                                  }`}
+                                >
+                                  {row.original.priority}
+                                </span>
+                              </div> */}
                             </div>
                           </div>
+
                           <div className="flex flex-col gap-2">
+                            <div className="flex flex-col">
+                              <div className=" pt-2">
+                                <span className="font-bold">Due Date:</span>{" "}
+                                {row.original.dueDate}
+                              </div>
+                            </div>
+
                             <div className="flex flex-col">
                               <div className="font-bold">Description</div>
                               {row.original.description}
