@@ -52,6 +52,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
+import Image from "next/image";
+
 export type Item = {
   id: string;
   name: string;
@@ -61,6 +63,7 @@ export type Item = {
   links: string[];
   type: string;
   assignedTo: string[];
+  supervisor: string[];
   description: string;
   notes: string[];
   tags: string[];
@@ -322,18 +325,45 @@ export function DataTableDemo() {
                               {row.original.description}
                             </div>
 
-                            <div>
-                              <div className="flex flex-col">
-                                {row.original.links.length > 0 && (
-                                  <>
-                                    <div className="font-bold">
-                                      Link to file
+                            <div className="flex flex-col mb-2">
+                              <div className="font-bold">Media & Files</div>
+                              {row.original.filesAndMedia.length > 0 && (
+                                <div className="flex gap-1">
+                                  {row.original.filesAndMedia.map((file) => (
+                                    <div className="border-2 rounded ">
+                                      <Link href={file} target="blank">
+                                        <img
+                                          alt="file"
+                                          src={file}
+                                          width={30}
+                                          height={30}
+                                        />
+                                      </Link>
+                                      {/* {file} */}
                                     </div>
-                                    <Link href={row.original.links[0]}>
-                                      {row.original.links}
-                                    </Link>
-                                  </>
-                                )}
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            <div>
+                              <div className="inline-flex flex-col items-start">
+                                <Link
+                                  href={`${row.original.links[0]}`}
+                                  target="_blank"
+                                >
+                                  <button
+                                    disabled={!row.original.links[0]}
+                                    className="rounded px-2 py-1 bg-green-300 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                  >
+                                    <span className="font-bold">
+                                      Link to Local File:{" "}
+                                    </span>
+                                    <span className="font-base">
+                                      {row.original.links[0]}
+                                    </span>
+                                  </button>
+                                </Link>
                               </div>
                             </div>
 
@@ -346,24 +376,54 @@ export function DataTableDemo() {
                                 </Link>
                               </div>
                             </div>
+
+                            {/*  */}
                           </div>
                         </div>
 
                         <div className="border w-[1px]"></div>
 
+                        {/* user feedback */}
                         <div className="flex flex-col gap-4 pl-4  w-1/3">
-                          <div className="flex space-x-2">
-                            <Switch id="airplane-mode" />
-                            <Label htmlFor="airplane-mode">Done</Label>
+                          <div className="flex flex-col">
+                            <h2 className="font-bold text-lg">Assigned To</h2>
+                            <div>{row.original.assignedTo} </div>
+                          </div>
+
+                          {/* <h2 className="font-bold text-lg">Feedback</h2> */}
+
+                          <div className="flex gap-3">
+                            <div className="flex space-x-2 items-center">
+                              <Switch id="progress" />
+                              <Label htmlFor="progress">Started</Label>
+                            </div>
+
+                            <div className="flex space-x-2 items-center">
+                              <Switch id="done" />
+                              <Label htmlFor="done">Done</Label>
+                            </div>
                           </div>
 
                           <div>
                             <Textarea placeholder="Type your feedback here." />
                           </div>
+
+                          <div className="flex flex-col gap-4">
+                            <div className="flex flex-col">
+                              <h2 className="font-bold text-lg">Supervisor</h2>
+                              <div>{row.original.supervisor} </div>
+                            </div>
+
+                            <div className="flex space-x-2 items-center">
+                              <Switch id="approved" />
+                              <Label htmlFor="approved">Approved</Label>
+                            </div>
+                          </div>
                         </div>
 
                         {/*  */}
                       </div>
+
                       {/* <div>row: {JSON.stringify(row)}</div> */}
                     </div>
                   )}{" "}

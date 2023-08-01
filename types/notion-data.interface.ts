@@ -48,6 +48,11 @@ export interface NotionData {
       type: string;
       people: any[];
     };
+    Supervisor: {
+      id: string;
+      type: string;
+      people: any[];
+    };
     "Parent item": {
       id: string;
       type: string;

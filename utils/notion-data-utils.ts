@@ -44,7 +44,10 @@ export const processNotionData = (data: NotionData[]) => {
       }),
       type: item.properties.Type?.select?.name,
       assignedTo: item.properties["Assigned to"]?.people.map((person) => {
-        return person.id;
+        return person.name;
+      }),
+      supervisor: item.properties.Supervisor.people.map((person) => {
+        return person.name;
       }),
       description: item.properties.Description?.rich_text[0]?.plain_text,
       notes: item.properties.Notes?.rich_text.map((note) => {
@@ -58,7 +61,7 @@ export const processNotionData = (data: NotionData[]) => {
       }),
       dueDate: item.properties["Due Date"]?.date?.start,
       filesAndMedia: item.properties["Files & media"]?.files.map((file) => {
-        return file.name;
+        return file.file.url;
       }),
       status: item.properties.Status?.status?.name,
       publicUrl: item.url,
@@ -93,6 +96,7 @@ interface DataItem {
   links: string[];
   type: string;
   assignedTo: string[];
+  supervisor: string[];
   description: string;
   notes: string[];
   tags: string[];
