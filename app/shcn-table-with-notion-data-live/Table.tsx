@@ -330,7 +330,10 @@ export function DataTableDemo() {
                               {row.original.filesAndMedia.length > 0 && (
                                 <div className="flex gap-1">
                                   {row.original.filesAndMedia.map((file) => (
-                                    <div className="border-2 rounded ">
+                                    <div
+                                      key={file}
+                                      className="border-2 rounded "
+                                    >
                                       <Link href={file} target="blank">
                                         <img
                                           alt="file"
