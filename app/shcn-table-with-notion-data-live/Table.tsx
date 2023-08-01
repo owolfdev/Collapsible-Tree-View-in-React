@@ -320,7 +320,7 @@ export function DataTableDemo() {
                               </div>
                             </div>
 
-                            <div className="flex flex-col">
+                            <div className="flex flex-col pr-4">
                               <div className="font-bold">Description</div>
                               {row.original.description}
                             </div>
